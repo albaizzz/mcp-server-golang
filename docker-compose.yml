@@ -1,0 +1,31 @@
+
+version: "3.9"
+services:
+  mcp-server:
+    build:
+      context: ./server-go
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+
+  mcp-host:
+    build:
+      context: ./host-node
+      dockerfile: Dockerfile
+    environment:
+      - MCP_SERVER1=http://mcp-server:3001
+      - PORT=4000
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mcp-server
+
+  mcp-client:
+    build:
+      context: ./client-node
+      dockerfile: Dockerfile
+    environment:
+      - MCP_HOST=http://mcp-host:4000
+      - LLM_MODE=mock
+    depends_on:
+      - mcp-host
