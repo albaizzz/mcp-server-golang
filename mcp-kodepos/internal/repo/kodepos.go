@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"mcp-kodepos/internal/models"
 	"strings"
 	"time"
@@ -67,22 +68,24 @@ func (r *KodeposRepo) Find(ctx context.Context, p models.ZipFindParams) ([]model
 	}
 
 	q := `
-        SELECT TOP(@lim) kodepos, kelurahan, kecamatan, kota_kab, provinsi, latitude, longitude
-        FROM dbo.kodepos WITH (NOLOCK)
+        SELECT TOP(20) kodepos, kelurahan, kecamatan, kota_kab, provinsi, latitude, longitude
+        FROM dbo.kodepos 
     `
 	if len(where) > 0 {
 		q += " WHERE " + bindify(where)
 	}
 	q += " ORDER BY kota_kab, kecamatan, kelurahan, kodepos"
 
-	lim := p.Limit
-	if lim <= 0 || lim > 200 {
-		lim = 20
-	}
-	args = append([]any{lim}, args...) // @lim = first
+	// lim := p.Limit
+	// if lim <= 0 || lim > 200 {
+	// 	lim = 20
+	// }
+	// args = append([]any{lim}, args...) // @lim = first
 
 	rows, err := r.db.QueryContext(ctx, q, args...)
 	if err != nil {
+		log.Printf(q, args...)
+		log.Printf(err.Error())
 		return nil, err
 	}
 	defer rows.Close()

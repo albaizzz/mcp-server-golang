@@ -24,7 +24,7 @@ func main() {
 	r := gin.Default()
 
 	// health
-	r.GET("/healthz", func(c *gin.Context) { c.JSON(200, gin.H{"ok": true}) })
+	r.GET("/health", func(c *gin.Context) { c.JSON(200, gin.H{"ok": true}) })
 
 	// MCP endpoint (JSON-RPC 2.0)
 	h := mcp.NewHandler(repo.NewKodeposRepo(dbase.SQL))

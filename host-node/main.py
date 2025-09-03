@@ -57,7 +57,7 @@ def call_llama3(user_prompt):
     ]
 
     payload = {
-        "model": "llama3",
+        "model": "llama3:8b-instruct-q4_K_M",
         "messages": [{"role": "user", "content": user_prompt}],
         "tools": tools,
         "stream": False
@@ -96,4 +96,4 @@ def call_llama3(user_prompt):
     return msg["content"]
 
 # ==== DEMO ====
-print(call_llama3("Kodepos untuk Cicadas Bandung berapa?"))
+print(call_llama3("Kodepos untuk Gambir berapa?"))
